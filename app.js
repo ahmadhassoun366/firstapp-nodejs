@@ -1,14 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const authRoutes = require("./routes/authRoutes");
-const authMiddleware = require("./middleware/auth");
+
+const authMiddleware = require("./middleware/auth.middleware");
 const productRoutes = require("./routes/products.routes");
+const authRoutes = require("./routes/auth.routes");
 
 const app = express();
 
 app.use(express.json()); // for parsing application/json
-app.use("/api/products", productRoutes);
 
 // MongoDB connection
 mongoose
@@ -21,6 +21,8 @@ mongoose
   .catch((err) => console.error(err));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+
 app.get("/api/protected", authMiddleware, (req, res) => {
   res.send("Access granted to protected content.");
 });
